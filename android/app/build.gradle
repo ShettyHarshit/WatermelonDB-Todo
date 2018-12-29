@@ -148,3 +148,11 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'  // ⬅️ This!
+// ...
+dependencies {
+    // ...
+    compile project(':watermelondb')  // ⬅️ This!
+}
