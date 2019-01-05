@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput} from 'react-native';
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { mySchema } from "./src/model/schema";
@@ -29,21 +29,24 @@ export default class App extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { todos: '' };
+    this.state = { todos: '', text: '' };
+    this.addRecord = this.addRecord.bind(this)
   }
   
   async addRecord(){
     const todosCollection = database.collections.get("todos");
     
+    const name = this.state.text;
     await database.action(async () => {
       const newTodo = await todosCollection.create(todo => {
-        todo.name = 'New post'
+        todo.name = name
       })
     })
+    this.setState({ text : '' })
     
     const allPosts = await todosCollection.query().fetch();
     console.log("todos", allPosts);  
-    this.setState({ todos : allPosts })
+    // this.setState({ todos : allPosts })
   }
   
   async componentDidMount(){
@@ -109,20 +112,18 @@ export default class App extends Component {
       
       return (
           <View style={styles.container}>
-      
-          {/* <TodoList todos={} /> */}
-          {/* {
-            _.map(this.state.todos, (todo) => {
-                <Text>{todo.name}</Text>
-            })
-          } */}
-          {/* <TodoList /> */}
+          <TextInput
+            placeholder="First Name"
+            style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
+            onChangeText={(text) => this.setState({ text : text })}
+            value={this.state.text}
+          />
           {
             _.map(this.state.todos, function (todo) {
               return <Text>{todo.name}</Text>
             })
           }
-          <Button onPress={this.addRecord} title="Yolo!" />
+          <Button onPress={this.addRecord.bind()} title="Add Todo!" />
         </View>
       );
 
