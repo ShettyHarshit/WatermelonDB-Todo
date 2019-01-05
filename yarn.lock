@@ -673,6 +673,13 @@
     rxjs-compat "^6.3.2"
     sql-escape-string "^1.1.0"
 
+"@nozbe/with-observables@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@nozbe/with-observables/-/with-observables-1.0.2.tgz#9749b3b5d33a058f8aed92d75138a5778bead89b"
+  integrity sha512-p9WNGTUm0eKb28ylcMBayUgBbzGoZ2bVBxzqtS5SxRL3Hopwf1eSNF+fGbC8fX1YHxhQjma4nN4pkKAt+H6NLA==
+  dependencies:
+    rxjs "^6.2.2"
+
 abab@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.0.tgz#aba0ab4c5eee2d4c79d3487d85450fb2376ebb0f"
