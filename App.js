@@ -4,13 +4,12 @@ import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { mySchema } from "./src/model/schema";
 import Todo from './src/model/Todo';
-import withObservables from "@nozbe/with-observables";
+// import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
-
 // import 'es6-symbol/implement';
-// import 'core-js/es6/symbol'; 
+// import 'core-js/es6/symbol';
 // import 'core-js/fn/symbol/iterator';
-// import TodoList from './src/components/Todo';
+// import 'core-js/es6/set';
 
 const adapter = new SQLiteAdapter({
   dbName: "WatermelonDemo",
@@ -121,10 +120,10 @@ export default class App extends Component {
           placeholder="Enter todo"
           style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={(text) => this.setState({ text : text })}
-          value="Add Todo"
+          value={this.state.text}
           />
+        <Button onPress={this.addRecord.bind()} title="Add Todo" />
         <List />
-        <Button onPress={this.addRecord.bind()} title={this.state.title} />
       </View>
       );
     }
