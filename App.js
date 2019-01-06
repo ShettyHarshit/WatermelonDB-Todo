@@ -29,8 +29,9 @@ export default class App extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { todos: '', text: '' };
+    this.state = { todos: '', text: '', title: 'Todo List' };
     this.addRecord = this.addRecord.bind(this)
+    this.deleteRecord = this.deleteRecord.bind(this)
   }
   
   async addRecord(){
@@ -40,13 +41,23 @@ export default class App extends Component {
     await database.action(async () => {
       const newTodo = await todosCollection.create(todo => {
         todo.name = name
+        const allPosts = await todosCollection.query().fetch();
+        this.setState({ something: 'changed' });
       })
     })
     this.setState({ text : '' })
     
-    const allPosts = await todosCollection.query().fetch();
     console.log("todos", allPosts);  
-    // this.setState({ todos : allPosts })
+    this.setState({title : 'TodoList!'})
+  }
+  
+  async deleteRecord(post){
+    console.log("dele", post.name)
+    const todosCollection = database.collections.get("todos");
+    // const post = await todosCollection.find(id)
+    await database.action(async () => {
+      await post.markAsDeleted() // syncable
+    })
   }
   
   async componentDidMount(){
@@ -67,89 +78,67 @@ export default class App extends Component {
     // console.log('1');
     // console.log(todosCollection);  
   }
-
+  
   
   
   
   render() {
-    // const allPosts = todosCollection.query().fetch(
-    //   _.map(allPosts, (todo) => {
-    //   console.log(todo.name);
-    //   console.log(todo.id);
-    //   console.log('2');
-      
-
-      
-    // })
+    const todosCollection = database.collections.get("todos");
     
-    // );
-    
-    // const TodoSingle = ({ todo }) => (
-    //   <View>
-    //     <Text>{todo.name}</Text>
-    //   </View>
-    // )
-    
-    // const enhance = withObservables(['todo'], ({ todo }) => ({
-    //   todo: todo.observe(),
-    // }))
-    
-    // const EnhancedTodo = enhance(TodoSingle)
-
-    const TodoList = () => {
+    const TodoSingle = ({ todo }) => {
       return <View>
-      {this.state.todos
-      }
-        {
-          {/* _.map(todos, (todo) => {
-            <EnhancedTodo todo={todo} />
-          }) */}
-        }
-        {/* {todos.map(todo =>
-    )} */}
+      <Text style={styles.instructions}>{todo.name}</Text>
+      <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
       </View>
     }
-      
-      return (
-          <View style={styles.container}>
-          <TextInput
-            placeholder="First Name"
-            style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={(text) => this.setState({ text : text })}
-            value={this.state.text}
+    
+    const enhance = withObservables(['todo'], ({ todo }) => ({
+      todo: todo.observe()
+    }))
+    
+    const EnhancedTodo = enhance(TodoSingle)
+    
+    return (
+      <View style={styles.container}>
+        <Text>{this.state.title}</Text>
+        <TextInput
+          placeholder="Enter todo"
+          style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
+          onChangeText={(text) => this.setState({ text : text })}
+          value={this.state.text}
           />
-          {
-            _.map(this.state.todos, function (todo) {
-              return <Text>{todo.name}</Text>
-            })
-          }
-          <Button onPress={this.addRecord.bind()} title="Add Todo!" />
-        </View>
+        {
+          _.map(this.state.todos, function (todo) {
+            return <EnhancedTodo
+            key={todo.id} 
+            todo={todo} 
+            style={styles.container}
+            />
+          })
+        }
+        <Button onPress={this.addRecord.bind()} title="Add Todo!" />
+      </View>
       );
-
-
-
+    }
   }
-}
-
   
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+      margin: 5,
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 10,
+    },
+    instructions: {
+      textAlign: 'center',
+      color: '#333333',
+      marginBottom: 5,
+    },
+  });
+  
