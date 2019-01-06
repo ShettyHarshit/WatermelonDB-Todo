@@ -41,14 +41,21 @@ export default class App extends Component {
     await database.action(async () => {
       const newTodo = await todosCollection.create(todo => {
         todo.name = name
-        const allPosts = await todosCollection.query().fetch();
+        const allPosts = todosCollection.query().fetch();
         this.setState({ something: 'changed' });
+        this.forceUpdate();
       })
     })
+    this.forceUpdate();
     this.setState({ text : '' })
-    
-    console.log("todos", allPosts);  
     this.setState({title : 'TodoList!'})
+    console.log("updated", database.collections.get("todos"));
+    const updatedTodos = await database.collections.get("todos")    
+    const allPosts = await updatedTodos.query().fetch();
+    console.log("updatedTodes", allPosts);
+    await this.setState({ todos: allPosts })
+    console.log(this.state.todos);
+    
   }
   
   async deleteRecord(post){
@@ -58,25 +65,20 @@ export default class App extends Component {
     await database.action(async () => {
       await post.markAsDeleted() // syncable
     })
+    const updatedTodos = await database.collections.get("todos")
+    const allPosts = await updatedTodos.query().fetch();
+    console.log("updatedTodes", allPosts);
+    await this.setState({ todos: allPosts })
+    console.log(this.state.todos);
   }
   
   async componentDidMount(){
     const todosCollection = database.collections.get("todos");
     const allPosts = await todosCollection.query().fetch();
     this.setState({ todos : allPosts })
-    console.log(this.state.todos)
     _.map(this.state.todos, (todo) => {
-      {/* <Text>{todo.name}</Text> */ }
-      { console.log(todo) }
       { console.log(todo.name) }
     })
-    // const todosCollection = database.collections.get("todos");
-    // console.log("mount");
-    // console.log(allPosts);
-    // console.log(database.collections.get("todos"));
-    // console.log(database.collections.get("todos").query().fetch());
-    // console.log('1');
-    // console.log(todosCollection);  
   }
   
   
@@ -84,19 +86,33 @@ export default class App extends Component {
   
   render() {
     const todosCollection = database.collections.get("todos");
+
+    const List = () => {
+      return <View>
+      {
+        _.map(this.state.todos, function (todo) {
+          return <TodoSingle
+            key={todo.id}
+            todo={todo}
+            style={styles.container}
+          />
+        })
+      }
+      </View>
+    }
     
     const TodoSingle = ({ todo }) => {
       return <View>
       <Text style={styles.instructions}>{todo.name}</Text>
-      <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
+        <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
       </View>
     }
     
-    const enhance = withObservables(['todo'], ({ todo }) => ({
-      todo: todo.observe()
-    }))
+    // const enhance = withObservables(['todo'], ({ todo }) => ({
+    //   todo: todo.observe()
+    // }))
     
-    const EnhancedTodo = enhance(TodoSingle)
+    // const EnhancedTodo = enhance(TodoSingle)
     
     return (
       <View style={styles.container}>
@@ -107,16 +123,9 @@ export default class App extends Component {
           onChangeText={(text) => this.setState({ text : text })}
           value={this.state.text}
           />
-        {
-          _.map(this.state.todos, function (todo) {
-            return <EnhancedTodo
-            key={todo.id} 
-            todo={todo} 
-            style={styles.container}
-            />
-          })
-        }
-        <Button onPress={this.addRecord.bind()} title="Add Todo!" />
+        <List />
+        <Button onPress={this.addRecord.bind()} title={this.state.title
+        } />
       </View>
       );
     }
