@@ -102,9 +102,9 @@ export default class App extends Component {
     }
     
     const TodoSingle = ({ todo }) => {
-      return <View>
-      <Text style={styles.instructions}>{todo.name}</Text>
-        <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
+      return <View style={styles.todo}>
+      <Text>{todo.name}</Text>
+      <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
       </View>
     }
     
@@ -121,11 +121,10 @@ export default class App extends Component {
           placeholder="Enter todo"
           style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={(text) => this.setState({ text : text })}
-          value={this.state.text}
+          value="Add Todo"
           />
         <List />
-        <Button onPress={this.addRecord.bind()} title={this.state.title
-        } />
+        <Button onPress={this.addRecord.bind()} title={this.state.title} />
       </View>
       );
     }
@@ -134,20 +133,27 @@ export default class App extends Component {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#F5FCFF",
       margin: 5,
+      width: "100%",
+    },
+    todo: {
+      width: "100%",
+      margin: 6,
+      padding: 6,
+      textAlign: "center",
     },
     welcome: {
       fontSize: 20,
-      textAlign: 'center',
-      margin: 10,
+      textAlign: "center",
+      margin: 10
     },
     instructions: {
-      textAlign: 'center',
-      color: '#333333',
-      marginBottom: 5,
-    },
+      textAlign: "center",
+      color: "#333333",
+      marginBottom: 5
+    }
   });
   
