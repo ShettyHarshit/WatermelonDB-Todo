@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {  } from 'react-native';
+import { ScrollView, StyleSheet } from "react-native";
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { mySchema } from "./src/model/schema";
 import Todo from './src/model/Todo';
 import {
   View,
-  Heading,
+  Title,
   TextInput,
   Row,
   Image,
@@ -94,8 +94,6 @@ export default class App extends Component {
   
   
   render() {
-    const todosCollection = database.collections.get("todos");
-
     const List = () => {
       return <View>
       {
@@ -112,7 +110,8 @@ export default class App extends Component {
     const TodoSingle = ({ todo }) => {
       return <View>
           <Row styleName="small">
-            <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} />
+            {/* <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} /> */}
+          <Icon name="right-arrow" />
             <Text>{todo.name}</Text>
             <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
               <Icon name="close" styleName="right-icon"/>
@@ -127,21 +126,19 @@ export default class App extends Component {
     
     // const EnhancedTodo = enhance(TodoSingle)
     
-    return <View>
-      <Heading>WatermelonDB Todo</Heading>
-        <TextInput 
-          placeholder="Enter todo" 
-          onChangeText={text => this.setState(
+    return <ScrollView>
+        <Title>WatermelonDB Todo</Title>
+
+        <TextInput placeholder="Enter todo" onChangeText={text => this.setState(
               { text: text }
-            )} 
-            value={this.state.text} 
-          />
-      <Button onPress={this.addRecord.bind()} >
-        <Text>
-          Add Todo
-        </Text>
-      </Button>
+            )} value={this.state.text}  style={styles.tb} />
+        <Row>
+      <Button onPress={this.addRecord.bind()} styleName="secondary confirmation">
+          <Icon name="plus-button" />
+          <Text>Add Todo</Text>
+        </Button>
+        </Row>
         <List />
-      </View>;
+      </ScrollView>;
     }
   }
