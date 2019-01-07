@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { ScrollView, StyleSheet } from "react-native";
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
@@ -17,6 +17,7 @@ import {
   Overlay,
   Tile
 } from "@shoutem/ui";
+import TileHeader from "./src/components/Header";
 // import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
 // import 'es6-symbol/implement';
@@ -38,17 +39,17 @@ const database = new Database({
 })
 
 export default class App extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = { todos: '', text: '', title: 'Todo List' };
     this.addRecord = this.addRecord.bind(this)
     this.deleteRecord = this.deleteRecord.bind(this)
   }
-  
-  async addRecord(){
+
+  async addRecord() {
     const todosCollection = database.collections.get("todos");
-    
+
     const name = this.state.text;
     await database.action(async () => {
       const newTodo = await todosCollection.create(todo => {
@@ -59,18 +60,18 @@ export default class App extends Component {
       })
     })
     this.forceUpdate();
-    this.setState({ text : '' })
-    this.setState({title : 'TodoList!'})
+    this.setState({ text: '' })
+    this.setState({ title: 'TodoList!' })
     console.log("updated", database.collections.get("todos"));
-    const updatedTodos = await database.collections.get("todos")    
+    const updatedTodos = await database.collections.get("todos")
     const allPosts = await updatedTodos.query().fetch();
     console.log("updatedTodes", allPosts);
     await this.setState({ todos: allPosts })
     console.log(this.state.todos);
-    
+
   }
-  
-  async deleteRecord(post){
+
+  async deleteRecord(post) {
     console.log("dele", post.name)
     const todosCollection = database.collections.get("todos");
     // const post = await todosCollection.find(id)
@@ -83,80 +84,74 @@ export default class App extends Component {
     await this.setState({ todos: allPosts })
     console.log(this.state.todos);
   }
-  
-  async componentDidMount(){
+
+  async componentDidMount() {
     const todosCollection = database.collections.get("todos");
     const allPosts = await todosCollection.query().fetch();
-    this.setState({ todos : allPosts })
+    this.setState({ todos: allPosts })
     _.map(this.state.todos, (todo) => {
       { console.log(todo.name) }
     })
   }
-  
-  
-  
-  
+
+
+
+
   render() {
     const List = () => {
       return <View>
-      {
-        _.map(this.state.todos, function (todo) {
-          return <TodoSingle
-          key={todo.id}
-          todo={todo}
-          />
-        })
-      }
+        {
+          _.map(this.state.todos, function (todo) {
+            return <TodoSingle
+              key={todo.id}
+              todo={todo}
+            />
+          })
+        }
       </View>
     }
     
+
     const TodoSingle = ({ todo }) => {
       return <View>
-      <Row styleName="small">
-      {/* <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} /> */}
-      <Icon name="right-arrow" />
-      <Text>{todo.name}</Text>
-      <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
-      <Icon name="close" styleName="right-icon"/>
-      </Button>
-      </Row>
+        <Row styleName="small">
+          {/* <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} /> */}
+          <Icon name="right-arrow" />
+          <Text>{todo.name}</Text>
+          <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
+            <Icon name="close" styleName="right-icon" />
+          </Button>
+        </Row>
       </View>;
     }
-    
+
     // const enhance = withObservables(['todo'], ({ todo }) => ({
     //   todo: todo.observe()
     // }))
-    
+
     // const EnhancedTodo = enhance(TodoSingle)
-    
+
     return <ScrollView>
-    <ImageBackground
-        style= {{ height: 100} }
-    source={require('./src/images/watermelondb.png')}
-    >
-    <Tile>
-          <Title styleName="md-gutter-top">WatermelonDB Todo</Title>
-    </Tile>
-    </ImageBackground>
-    <TextInput placeholder="Enter todo" onChangeText={text => this.setState(
-      { text: text }
-      )} value={this.state.text}  style={styles.tb} />
+      <TileHeader />
+      <TextInput placeholder="Enter todo" onChangeText={text => this.setState(
+        { text: text }
+      )} value={this.state.text} style={styles.tb} />
       <Row>
-      <Button onPress={this.addRecord.bind()} styleName="secondary confirmation">
-      <Icon name="plus-button" />
-      <Text>Add Todo</Text>
-      </Button>
+        <Button onPress={this.addRecord.bind()} styleName="secondary confirmation">
+          <Icon name="plus-button" />
+          <Text>Add Todo</Text>
+        </Button>
       </Row>
       <List />
-      </ScrollView>;
-    }
+    </ScrollView>;
   }
-  
-  const styles = StyleSheet.create({
-    tb: {
-      marginLeft: 25,
-      marginRight: 25,
-      marginBottom : 10,
-      marginTop : 10
-    },
-  });
+}
+
+const styles = StyleSheet.create({
+  tb: {
+    marginLeft: 25,
+    marginRight: 25,
+    marginBottom: 10,
+    marginTop: 10
+  },
+});
