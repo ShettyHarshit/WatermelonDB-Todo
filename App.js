@@ -142,3 +142,12 @@ export default class App extends Component {
       </ScrollView>;
     }
   }
+
+const styles = StyleSheet.create({
+  tb: {
+    marginLeft: 25,
+    marginRight: 25,
+    marginBottom : 10,
+    marginTop : 10
+  },
+});
