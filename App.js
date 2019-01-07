@@ -1,10 +1,19 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, TextInput} from 'react-native';
+import {  } from 'react-native';
 import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { mySchema } from "./src/model/schema";
 import Todo from './src/model/Todo';
-import { Examples } from "@shoutem/ui";
+import {
+  View,
+  Heading,
+  TextInput,
+  Row,
+  Image,
+  Icon,
+  Button,
+  Text
+} from "@shoutem/ui";
 // import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
 // import 'es6-symbol/implement';
@@ -94,7 +103,6 @@ export default class App extends Component {
           return <TodoSingle
             key={todo.id}
             todo={todo}
-            style={styles.container}
           />
         })
       }
@@ -102,10 +110,15 @@ export default class App extends Component {
     }
     
     const TodoSingle = ({ todo }) => {
-      return <View style={styles.todo}>
-      <Text>{todo.name}</Text>
-      <Button onPress={() => this.deleteRecord(todo)} title="Delete"/>
-      </View>
+      return <View>
+          <Row styleName="small">
+            <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} />
+            <Text>{todo.name}</Text>
+            <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
+              <Icon name="close" styleName="right-icon"/>
+            </Button>
+          </Row>
+        </View>;
     }
     
     // const enhance = withObservables(['todo'], ({ todo }) => ({
@@ -114,42 +127,21 @@ export default class App extends Component {
     
     // const EnhancedTodo = enhance(TodoSingle)
     
-    return <View style={styles.container}>
-        <Text>{this.state.title}</Text>
-        <TextInput placeholder="Enter todo" style={{ height: 40, width: 200, borderColor: "gray", borderWidth: 1 }} onChangeText={text => this.setState(
+    return <View>
+      <Heading>WatermelonDB Todo</Heading>
+        <TextInput 
+          placeholder="Enter todo" 
+          onChangeText={text => this.setState(
               { text: text }
-            )} value={this.state.text} />
-        <Button onPress={this.addRecord.bind()} title="Add Todo" />
+            )} 
+            value={this.state.text} 
+          />
+      <Button onPress={this.addRecord.bind()} >
+        <Text>
+          Add Todo
+        </Text>
+      </Button>
         <List />
-        <Examples />
       </View>;
     }
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#F5FCFF",
-      margin: 5,
-      width: "100%",
-    },
-    todo: {
-      width: "100%",
-      margin: 6,
-      padding: 6,
-      textAlign: "center",
-    },
-    welcome: {
-      fontSize: 20,
-      textAlign: "center",
-      margin: 10
-    },
-    instructions: {
-      textAlign: "center",
-      color: "#333333",
-      marginBottom: 5
-    }
-  });
-  
