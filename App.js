@@ -9,10 +9,13 @@ import {
   Title,
   TextInput,
   Row,
-  Image,
+  ImageBackground,
   Icon,
   Button,
-  Text
+  Text,
+  Heading,
+  Overlay,
+  Tile
 } from "@shoutem/ui";
 // import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
@@ -99,8 +102,8 @@ export default class App extends Component {
       {
         _.map(this.state.todos, function (todo) {
           return <TodoSingle
-            key={todo.id}
-            todo={todo}
+          key={todo.id}
+          todo={todo}
           />
         })
       }
@@ -109,15 +112,15 @@ export default class App extends Component {
     
     const TodoSingle = ({ todo }) => {
       return <View>
-          <Row styleName="small">
-            {/* <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} /> */}
-          <Icon name="right-arrow" />
-            <Text>{todo.name}</Text>
-            <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
-              <Icon name="close" styleName="right-icon"/>
-            </Button>
-          </Row>
-        </View>;
+      <Row styleName="small">
+      {/* <Image styleName="small-avatar" source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-9.png" }} /> */}
+      <Icon name="right-arrow" />
+      <Text>{todo.name}</Text>
+      <Button onPress={() => this.deleteRecord(todo)} title="" styleName="right-icon">
+      <Icon name="close" styleName="right-icon"/>
+      </Button>
+      </Row>
+      </View>;
     }
     
     // const enhance = withObservables(['todo'], ({ todo }) => ({
@@ -127,27 +130,33 @@ export default class App extends Component {
     // const EnhancedTodo = enhance(TodoSingle)
     
     return <ScrollView>
-        <Title>WatermelonDB Todo</Title>
-
-        <TextInput placeholder="Enter todo" onChangeText={text => this.setState(
-              { text: text }
-            )} value={this.state.text}  style={styles.tb} />
-        <Row>
+    <ImageBackground
+        style= {{ height: 100} }
+    source={require('./src/images/watermelondb.png')}
+    >
+    <Tile>
+          <Title styleName="md-gutter-top">WatermelonDB Todo</Title>
+    </Tile>
+    </ImageBackground>
+    <TextInput placeholder="Enter todo" onChangeText={text => this.setState(
+      { text: text }
+      )} value={this.state.text}  style={styles.tb} />
+      <Row>
       <Button onPress={this.addRecord.bind()} styleName="secondary confirmation">
-          <Icon name="plus-button" />
-          <Text>Add Todo</Text>
-        </Button>
-        </Row>
-        <List />
+      <Icon name="plus-button" />
+      <Text>Add Todo</Text>
+      </Button>
+      </Row>
+      <List />
       </ScrollView>;
     }
   }
-
-const styles = StyleSheet.create({
-  tb: {
-    marginLeft: 25,
-    marginRight: 25,
-    marginBottom : 10,
-    marginTop : 10
-  },
-});
+  
+  const styles = StyleSheet.create({
+    tb: {
+      marginLeft: 25,
+      marginRight: 25,
+      marginBottom : 10,
+      marginTop : 10
+    },
+  });
