@@ -4,6 +4,7 @@ import { Database } from '@nozbe/watermelondb'
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { mySchema } from "./src/model/schema";
 import Todo from './src/model/Todo';
+import { Examples } from "@shoutem/ui";
 // import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
 // import 'es6-symbol/implement';
@@ -113,19 +114,15 @@ export default class App extends Component {
     
     // const EnhancedTodo = enhance(TodoSingle)
     
-    return (
-      <View style={styles.container}>
+    return <View style={styles.container}>
         <Text>{this.state.title}</Text>
-        <TextInput
-          placeholder="Enter todo"
-          style={{ height: 40, width: 200, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={(text) => this.setState({ text : text })}
-          value={this.state.text}
-          />
+        <TextInput placeholder="Enter todo" style={{ height: 40, width: 200, borderColor: "gray", borderWidth: 1 }} onChangeText={text => this.setState(
+              { text: text }
+            )} value={this.state.text} />
         <Button onPress={this.addRecord.bind()} title="Add Todo" />
         <List />
-      </View>
-      );
+        <Examples />
+      </View>;
     }
   }
   
