@@ -20,21 +20,21 @@ export const getTodos = async () => {
     return await database.collections.get("todos").query().fetch();
 }
 
-let updatedtodos;
 
 export const addTodo = async (name) => {
+    let updatedtodos;
     await database.action(async () => {
         const newTodo = await todosCollection.create(todo => {
             todo.name = name
-            updatedtodos = await database.collections.get("todos").query().fetch();
         })
+        updatedtodos = await database.collections.get("todos").query().fetch();
+    })
     return updatedtodos
-})}
+}
 
 export const deleteTodo = async (todo) => {
     await database.action(async () => {
         await todo.markAsDeleted() 
-        updatedTodos = await database.collections.get("todos").query().fetch();
     })
-    return updatedtodos
+    return await database.collections.get("todos").query().fetch()
 }

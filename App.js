@@ -20,8 +20,8 @@ export default class App extends Component {
     this.setState({ text: '' })
   }
 
-  async deleteRecord(post) {
-    this.setState({ todos: await deleteTodo(post) })
+  async deleteRecord(todo) {
+    this.setState({ todos: await deleteTodo(todo) })
   }
 
   async componentDidMount() {
