@@ -1,84 +1,27 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet } from "react-native";
-import { Database } from '@nozbe/watermelondb'
-import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-import { mySchema } from "./src/model/schema";
-import Todo from './src/model/Todo';
 import { getTodos, addTodo, deleteTodo } from './src/model/crud';
-import {
-  View,
-  TextInput,
-  Row,
-  Icon,
-  Button,
-  Text,
-} from "@shoutem/ui";
+import { View, TextInput, Row, Icon, Button, Text } from "@shoutem/ui";
 import TileHeader from "./src/components/Header";
 // import withObservables from "@nozbe/with-observables";
 import _ from 'lodash';
-
-// const adapter = new SQLiteAdapter({
-//   dbName: "WatermelonDemo",
-//   schema: mySchema
-// });
-
-// const database = new Database({
-//   adapter,
-//   modelClasses: [
-//     Todo
-//   ],
-//   actionsEnabled: true,
-// })
 
 export default class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = { todos: '', text: '', title: 'Todo List' };
-    // this.addRecord = this.addRecord.bind(this)
-    // this.deleteRecord = this.deleteRecord.bind(this)
+    this.addRecord = this.addRecord.bind(this)
+    this.deleteRecord = this.deleteRecord.bind(this)
   }
 
   async addRecord() {
-    // const todosCollection = database.collections.get("todos");
-
-    // const name = this.state.text;
-    // await database.action(async () => {
-    //   const newTodo = await todosCollection.create(todo => {
-    //     todo.name = name
-    //     const allPosts = todosCollection.query().fetch();
-    //     this.setState({ something: 'changed' });
-    //     this.forceUpdate();
-    //   })
-    // })
-    // this.forceUpdate();
-    // this.setState({ text: '' })
-    // this.setState({ title: 'TodoList!' })
-    // const updatedTodos = await database.collections.get("todos")
-    // const allPosts = await updatedTodos.query().fetch();
-    // await this.setState({ todos: allPosts })
-    // _.map(await addTodo("Refactor"), todo => {
-    //   {
-    //     console.log(todo.name);
-    //   }
-    // });
     this.setState({ todos: await addTodo(this.state.text) });
     this.setState({ text: '' })
-    
   }
 
   async deleteRecord(post) {
-    // console.log("dele", post.name)
-    // const todosCollection = database.collections.get("todos");
-    // // const post = await todosCollection.find(id)
-    // await database.action(async () => {
-    //   await post.markAsDeleted() // syncable
-    // })
-    // const updatedTodos = await database.collections.get("todos")
-    // const allPosts = await updatedTodos.query().fetch();
-    // await this.setState({ todos: allPosts })
     this.setState({ todos: await deleteTodo(post) })
-
   }
 
   async componentDidMount() {
@@ -90,10 +33,7 @@ export default class App extends Component {
       return <View>
         {
           _.map(this.state.todos, function (todo) {
-            return <TodoSingle
-              key={todo.id}
-              todo={todo}
-            />
+            return <TodoSingle key={todo.id} todo={todo} />
           })
         }
       </View>

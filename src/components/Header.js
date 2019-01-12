@@ -1,16 +1,8 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from "react-native";
 import {
     View,
-    Title,
-    TextInput,
-    Row,
     ImageBackground,
-    Icon,
-    Button,
-    Text,
     Heading,
-    Overlay,
     Tile
 } from "@shoutem/ui";
 

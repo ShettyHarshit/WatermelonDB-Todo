@@ -10,22 +10,19 @@ const adapter = new SQLiteAdapter({
 
 const database = new Database({
     adapter,
-    modelClasses: [
-        Todo
-    ],
+    modelClasses: [ Todo ],
     actionsEnabled: true,
 })
 
 const todosCollection = database.collections.get("todos");
 
-const xtodosCollection = database.collections.get("todos");
-
 export const getTodos = async () => {
     return await database.collections.get("todos").query().fetch();
 }
 
+let updatedtodos;
+
 export const addTodo = async (name) => {
-    const updatedtodos;
     await database.action(async () => {
         const newTodo = await todosCollection.create(todo => {
             todo.name = name
@@ -35,7 +32,6 @@ export const addTodo = async (name) => {
 })}
 
 export const deleteTodo = async (todo) => {
-    const updatedtodos;
     await database.action(async () => {
         await todo.markAsDeleted() 
         updatedTodos = await database.collections.get("todos").query().fetch();
